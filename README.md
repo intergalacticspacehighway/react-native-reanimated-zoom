@@ -62,6 +62,9 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 MIT
 ```
 
+## Known issues
+- https://github.com/software-mansion/react-native-gesture-handler/issues/1804#issuecomment-1019819191 Currently pan and pinch gesture are not triggering simultaneously in expo managed workflow. I'll look into it when I have some time. This issue doesn't happen on bare react native, release or expo dev client builds.
+
 ## Credits
 
 Built with [react-native-builder-bob](https://github.com/callstack/react-native-builder-bob/) ❤️
