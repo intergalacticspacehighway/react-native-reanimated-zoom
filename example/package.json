@@ -1,0 +1,32 @@
+{
+  "name": "react-native-reanimated-zoom-example",
+  "description": "Example app for react-native-reanimated-zoom",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index",
+  "scripts": {
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "start": "expo start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "expo": "^44.0.0",
+    "expo-splash-screen": "~0.14.1",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-native": "0.64.3",
+    "react-native-gesture-handler": "~2.1.0",
+    "react-native-reanimated": "~2.3.1",
+    "react-native-unimodules": "~0.15.0",
+    "react-native-web": "0.17.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.9.6",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-preset-expo": "9.0.2",
+    "expo-cli": "^4.0.13"
+  }
+}

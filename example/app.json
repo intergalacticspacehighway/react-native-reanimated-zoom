@@ -1,0 +1,22 @@
+{
+  "name": "react-native-reanimated-zoom-example",
+  "displayName": "ReanimatedZoom Example",
+  "expo": {
+    "name": "react-native-reanimated-zoom-example",
+    "slug": "react-native-reanimated-zoom-example",
+    "description": "Example app for react-native-reanimated-zoom",
+    "privacy": "public",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
