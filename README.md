@@ -1,10 +1,16 @@
 Please consider supporting Ukraine if you can. Thank you. Links for more information.
+
 https://twitter.com/Ukraine
+
 https://savelife.in.ua/en/donate/
 
 # react-native-reanimated-zoom
 
 - Component for zooming react native views. 🔎
+
+
+https://user-images.githubusercontent.com/23293248/155864802-a81cf3a3-9f08-4399-abee-64bc94049c8b.mp4
+
 
 # Features
 
