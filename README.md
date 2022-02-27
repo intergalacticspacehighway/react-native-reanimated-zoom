@@ -8,9 +8,7 @@ https://savelife.in.ua/en/donate/
 
 - Component for zooming react native views. 🔎
 
-
 https://user-images.githubusercontent.com/23293248/155864802-a81cf3a3-9f08-4399-abee-64bc94049c8b.mp4
-
 
 # Features
 
@@ -48,8 +46,10 @@ export default function App() {
     </Zoom>
   );
 }
+```
 
 ## Props
+
 - minimumZoomScale - Determines minimum scale value the component should zoom out. Defaults to 1.
 - maximumZoomScale - Determines maximum scale value the component should zoom in. Defaults to 8.
 
@@ -60,9 +60,9 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 ## License
 
 MIT
-```
 
 ## Known issues
+
 - https://github.com/software-mansion/react-native-gesture-handler/issues/1804#issuecomment-1019819191 Currently pan and pinch gesture are not triggering simultaneously in expo managed workflow. I'll look into it when I have some time. This issue doesn't happen on bare react native, release or expo dev client builds.
 
 ## Credits
