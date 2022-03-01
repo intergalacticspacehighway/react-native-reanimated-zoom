@@ -146,10 +146,10 @@ export function Zoom(props: Props) {
           // translate the image to the focal point and zoom
           scale.value = withTiming(maximumZoomScale);
           translationX.value = withTiming(
-            -1 * (scale.value * (e.x - viewWidth.value / 2))
+            -1 * (maximumZoomScale * (e.x - viewWidth.value / 2))
           );
           translationY.value = withTiming(
-            -1 * (scale.value * (e.y - viewHeight.value / 2))
+            -1 * (maximumZoomScale * (e.y - viewHeight.value / 2))
           );
         }
       })
