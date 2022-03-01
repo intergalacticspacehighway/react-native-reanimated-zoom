@@ -1,6 +1,6 @@
 {
   "name": "react-native-reanimated-zoom",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Component to add zoom in react native views.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
