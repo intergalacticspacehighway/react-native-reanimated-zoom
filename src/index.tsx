@@ -50,6 +50,9 @@ export function Zoom(props: Props) {
         cancelAnimation(translationX);
         cancelAnimation(translationY);
         cancelAnimation(scale);
+
+        prevTranslationX.value = translationX.value;
+        prevTranslationY.value = translationY.value;
       })
       .onUpdate((e) => {
         // track translate when not panning so we can subtract it
@@ -66,8 +69,6 @@ export function Zoom(props: Props) {
       .onEnd(() => {
         if (isPinching.value || !isZoomed.value) return;
 
-        prevTranslationX.value = translationX.value;
-        prevTranslationY.value = translationY.value;
         panTranslateX.value = 0;
         panTranslateY.value = 0;
       });
