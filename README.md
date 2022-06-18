@@ -89,8 +89,8 @@ const ListExample = () => {
 
 ## Props
 
-- minimumZoomScale - Determines minimum scale value the component should zoom out. Defaults to 1.
-- maximumZoomScale - Determines maximum scale value the component should zoom in. Defaults to 8.
+- `minimumZoomScale` - Determines minimum scale value the component should zoom out. Defaults to 1.
+- `maximumZoomScale` - Determines maximum scale value the component should zoom in. Defaults to 8.
 
 ## Examples
 
