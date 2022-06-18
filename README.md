@@ -6,11 +6,18 @@ https://user-images.githubusercontent.com/23293248/155864802-a81cf3a3-9f08-4399-
 
 # Features
 
+- Simple API.
 - Performant. No state triggered re-renders. ⚡️
 - Can be used with Image/Video or any kind of View.
-- Source code is simple enough. Copy/paste to make it customisable as per the need.
+- Works with List.
+
+https://user-images.githubusercontent.com/23293248/174450283-e05684ed-9963-448b-8efc-bf33973aae0a.MP4
+
 
 ## Installation
+
+
+
 
 ```sh
 # npm
