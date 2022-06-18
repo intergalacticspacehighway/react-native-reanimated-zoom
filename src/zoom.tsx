@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import type { ViewProps } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -9,6 +9,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { ZoomListContext } from './zoom-list-context';
 
 type Props = {
   children: React.ReactNode;
@@ -23,7 +24,8 @@ export function Zoom(props: Props) {
     style: propStyle,
     onLayout,
   } = props;
-  const [panEnabled, setPanEnabled] = useState(false);
+
+  const zoomListContext = useContext(ZoomListContext);
 
   const translationX = useSharedValue(0);
   const translationY = useSharedValue(0);
@@ -44,9 +46,25 @@ export function Zoom(props: Props) {
   const panTranslateY = useSharedValue(0);
 
   const gesture = useMemo(() => {
+    const resetZoomState = () => {
+      'worklet';
+      // reset all state
+      translationX.value = withTiming(0);
+      translationY.value = withTiming(0);
+      scale.value = withTiming(1);
+      originX.value = 0;
+      originY.value = 0;
+      isPinching.value = false;
+      isZoomed.value = false;
+      prevScale.value = 0;
+      prevTranslationX.value = 0;
+      prevTranslationY.value = 0;
+      panTranslateX.value = 0;
+      panTranslateY.value = 0;
+    };
+
     // we only activate pan handler when the image is zoomed or user is not pinching
     const pan = Gesture.Pan()
-      .enabled(panEnabled)
       .onStart(() => {
         if (isPinching.value || !isZoomed.value) return;
 
@@ -85,7 +103,7 @@ export function Zoom(props: Props) {
           }
 
           if (nextTranslateY > maxTranslateY) {
-            translationY.value = maxTranslateX;
+            translationY.value = maxTranslateY;
           } else if (nextTranslateY < minTranslateY) {
             translationY.value = minTranslateY;
           } else {
@@ -151,25 +169,17 @@ export function Zoom(props: Props) {
         isPinching.value = false;
         prevTranslationX.value = translationX.value;
         prevTranslationY.value = translationY.value;
+
+        if (scale.value < 1.1) {
+          resetZoomState();
+        }
       });
 
     const doubleTap = Gesture.Tap()
       .onStart((e) => {
         // if zoomed in or zoomed out, we want to reset
         if (scale.value !== 1) {
-          // reset all state
-          translationX.value = withTiming(0);
-          translationY.value = withTiming(0);
-          scale.value = withTiming(1);
-          originX.value = 0;
-          originY.value = 0;
-          isPinching.value = false;
-          isZoomed.value = false;
-          prevScale.value = 0;
-          prevTranslationX.value = 0;
-          prevTranslationY.value = 0;
-          panTranslateX.value = 0;
-          panTranslateY.value = 0;
+          resetZoomState();
         } else {
           // translate the image to the focal point and zoom
           scale.value = withTiming(maximumZoomScale);
@@ -183,21 +193,27 @@ export function Zoom(props: Props) {
       })
       .numberOfTaps(2);
 
+    if (zoomListContext?.simultaneousPanGestureRef) {
+      pan.simultaneousWithExternalGesture(
+        zoomListContext?.simultaneousPanGestureRef
+      );
+    }
+
     return Gesture.Race(doubleTap, Gesture.Simultaneous(pan, pinch));
 
     // only add prop dependencies
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [maximumZoomScale, minimumZoomScale, panEnabled]);
+  }, [maximumZoomScale, minimumZoomScale, zoomListContext]);
 
   useDerivedValue(() => {
     if (scale.value > 1 && !isZoomed.value) {
       isZoomed.value = true;
-      runOnJS(setPanEnabled)(true);
+      if (zoomListContext) runOnJS(zoomListContext.onZoomBegin)();
     } else if (scale.value === 1 && isZoomed.value) {
       isZoomed.value = false;
-      runOnJS(setPanEnabled)(false);
+      if (zoomListContext) runOnJS(zoomListContext.onZoomEnd)();
     }
-  }, []);
+  }, [zoomListContext]);
 
   const style = useAnimatedStyle(() => {
     return {
@@ -209,19 +225,23 @@ export function Zoom(props: Props) {
     };
   }, []);
 
+  const memoizedOnLayout = useCallback(
+    (e) => {
+      viewHeight.value = e.nativeEvent.layout.height;
+      viewWidth.value = e.nativeEvent.layout.width;
+      onLayout?.(e);
+    },
+    [viewHeight, viewWidth, onLayout]
+  );
+
+  const memoizedStyle = useMemo(() => [style, propStyle], [style, propStyle]);
+
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View
         {...props}
-        onLayout={useCallback(
-          (e) => {
-            viewHeight.value = e.nativeEvent.layout.height;
-            viewWidth.value = e.nativeEvent.layout.width;
-            onLayout?.(e);
-          },
-          [viewHeight, viewWidth, onLayout]
-        )}
-        style={useMemo(() => [style, propStyle], [style, propStyle])}
+        onLayout={memoizedOnLayout}
+        style={memoizedStyle}
       />
     </GestureDetector>
   );
