@@ -1,14 +1,17 @@
-# react-native-reanimated-zoom
+# react-native-reanimated-zoom 🔎
 
-Component for zooming react native views. 🔎
+Component for zooming react native views. 🧐
 
 https://user-images.githubusercontent.com/23293248/155864802-a81cf3a3-9f08-4399-abee-64bc94049c8b.mp4
 
 # Features
 
+- Simple API.
 - Performant. No state triggered re-renders. ⚡️
 - Can be used with Image/Video or any kind of View.
-- Source code is simple enough. Copy/paste to make it customisable as per the need.
+- Works with FlatList/ScrollView.
+
+https://user-images.githubusercontent.com/23293248/174450283-e05684ed-9963-448b-8efc-bf33973aae0a.MP4
 
 ## Installation
 
@@ -21,9 +24,11 @@ yarn add react-native-reanimated-zoom
 
 ## Peer dependencies
 
-Make sure you have installed react native gesture handler > 2 and react native reanimated > 2.
+Make sure you have installed `react-native-gesture-handler` > 2 and `react-native-reanimated` > 2.
 
 ## Usage
+
+### Simple zoom view
 
 ```jsx
 import { Zoom } from 'react-native-reanimated-zoom';
@@ -42,10 +47,54 @@ export default function App() {
 }
 ```
 
+### With FlatList or ScrollView
+
+```jsx
+import { FlatList } from 'react-native';
+import { Zoom, createZoomListComponent } from 'react-native-reanimated-zoom';
+
+const ZoomFlatList = createZoomListComponent(FlatList);
+
+const ListExample = () => {
+  const renderItem = React.useCallback(
+    ({ item }) => {
+      return (
+        <Zoom>
+          <Image
+            source={{
+              uri: item,
+            }}
+            style={{
+              width: 400,
+              height: 400,
+            }}
+          />
+        </Zoom>
+      );
+    },
+    [dimension]
+  );
+
+  return (
+    <ZoomFlatList
+      data={data}
+      pagingEnabled
+      horizontal
+      keyExtractor={(item) => item}
+      renderItem={renderItem}
+    />
+  );
+};
+```
+
 ## Props
 
-- minimumZoomScale - Determines minimum scale value the component should zoom out. Defaults to 1.
-- maximumZoomScale - Determines maximum scale value the component should zoom in. Defaults to 8.
+- `minimumZoomScale` - Determines minimum scale value the component should zoom out. Defaults to 1.
+- `maximumZoomScale` - Determines maximum scale value the component should zoom in. Defaults to 8.
+
+## Examples
+
+- You can find examples of a simple zoom view and zoomable items in list [here](https://github.com/intergalacticspacehighway/react-native-reanimated-zoom/tree/main/example)
 
 ## Contributing
 
