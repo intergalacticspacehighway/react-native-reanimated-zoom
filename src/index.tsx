@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from "react";
-import type { ViewProps } from "react-native";
+import React, { useCallback, useMemo, useState } from 'react';
+import type { ViewProps } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,8 +7,9 @@ import Animated, {
   withTiming,
   cancelAnimation,
   runOnJS,
-} from "react-native-reanimated";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+  withSpring,
+} from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 type Props = {
   children: React.ReactNode;
@@ -58,15 +59,39 @@ export function Zoom(props: Props) {
         prevTranslationY.value = translationY.value;
       })
       .onUpdate((e) => {
-        // track translate when not panning so we can subtract it
         if (isPinching.value || !isZoomed.value) {
           panTranslateX.value = e.translationX;
           panTranslateY.value = e.translationY;
         } else {
-          translationX.value =
+          // imagine what happens to pixels when we zoom in. (they get multiplied by x times scale)
+          const maxTranslateX =
+            (viewWidth.value / 2) * scale.value - viewWidth.value / 2;
+          const minTranslateX = -maxTranslateX;
+
+          const maxTranslateY =
+            (viewHeight.value / 2) * scale.value - viewHeight.value / 2;
+          const minTranslateY = -maxTranslateY;
+
+          const nextTranslateX =
             prevTranslationX.value + e.translationX - panTranslateX.value;
-          translationY.value =
+          const nextTranslateY =
             prevTranslationY.value + e.translationY - panTranslateY.value;
+
+          if (nextTranslateX > maxTranslateX) {
+            translationX.value = withSpring(maxTranslateX);
+          } else if (nextTranslateX < minTranslateX) {
+            translationX.value = withSpring(minTranslateX);
+          } else {
+            translationX.value = nextTranslateX;
+          }
+
+          if (nextTranslateY > maxTranslateY) {
+            translationY.value = withSpring(maxTranslateX);
+          } else if (nextTranslateY < minTranslateY) {
+            translationY.value = withSpring(minTranslateY);
+          } else {
+            translationY.value = nextTranslateY;
+          }
         }
       })
       .onEnd(() => {
