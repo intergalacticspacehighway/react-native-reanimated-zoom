@@ -13,10 +13,14 @@
       "web"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nishanbende.reactnativereanimatedzoomexample"
     },
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "package": "com.nishanbende.reactnativereanimatedzoomexample"
+    }
   }
 }
