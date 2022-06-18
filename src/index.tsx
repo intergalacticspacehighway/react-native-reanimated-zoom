@@ -7,7 +7,6 @@ import Animated, {
   withTiming,
   cancelAnimation,
   runOnJS,
-  withSpring,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
@@ -78,17 +77,17 @@ export function Zoom(props: Props) {
             prevTranslationY.value + e.translationY - panTranslateY.value;
 
           if (nextTranslateX > maxTranslateX) {
-            translationX.value = withSpring(maxTranslateX);
+            translationX.value = maxTranslateX;
           } else if (nextTranslateX < minTranslateX) {
-            translationX.value = withSpring(minTranslateX);
+            translationX.value = minTranslateX;
           } else {
             translationX.value = nextTranslateX;
           }
 
           if (nextTranslateY > maxTranslateY) {
-            translationY.value = withSpring(maxTranslateX);
+            translationY.value = maxTranslateX;
           } else if (nextTranslateY < minTranslateY) {
-            translationY.value = withSpring(minTranslateY);
+            translationY.value = minTranslateY;
           } else {
             translationY.value = nextTranslateY;
           }
