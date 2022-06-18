@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import type { ViewProps } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -6,6 +6,8 @@ import Animated, {
   useDerivedValue,
   withTiming,
   cancelAnimation,
+  runOnJS,
+  withSpring,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
@@ -22,6 +24,7 @@ export function Zoom(props: Props) {
     style: propStyle,
     onLayout,
   } = props;
+  const [panEnabled, setPanEnabled] = useState(false);
 
   const translationX = useSharedValue(0);
   const translationY = useSharedValue(0);
@@ -44,6 +47,7 @@ export function Zoom(props: Props) {
   const gesture = useMemo(() => {
     // we only activate pan handler when the image is zoomed or user is not pinching
     const pan = Gesture.Pan()
+      .enabled(panEnabled)
       .onStart(() => {
         if (isPinching.value || !isZoomed.value) return;
 
@@ -55,15 +59,39 @@ export function Zoom(props: Props) {
         prevTranslationY.value = translationY.value;
       })
       .onUpdate((e) => {
-        // track translate when not panning so we can subtract it
         if (isPinching.value || !isZoomed.value) {
           panTranslateX.value = e.translationX;
           panTranslateY.value = e.translationY;
         } else {
-          translationX.value =
+          // imagine what happens to pixels when we zoom in. (they get multiplied by x times scale)
+          const maxTranslateX =
+            (viewWidth.value / 2) * scale.value - viewWidth.value / 2;
+          const minTranslateX = -maxTranslateX;
+
+          const maxTranslateY =
+            (viewHeight.value / 2) * scale.value - viewHeight.value / 2;
+          const minTranslateY = -maxTranslateY;
+
+          const nextTranslateX =
             prevTranslationX.value + e.translationX - panTranslateX.value;
-          translationY.value =
+          const nextTranslateY =
             prevTranslationY.value + e.translationY - panTranslateY.value;
+
+          if (nextTranslateX > maxTranslateX) {
+            translationX.value = withSpring(maxTranslateX);
+          } else if (nextTranslateX < minTranslateX) {
+            translationX.value = withSpring(minTranslateX);
+          } else {
+            translationX.value = nextTranslateX;
+          }
+
+          if (nextTranslateY > maxTranslateY) {
+            translationY.value = withSpring(maxTranslateX);
+          } else if (nextTranslateY < minTranslateY) {
+            translationY.value = withSpring(minTranslateY);
+          } else {
+            translationY.value = nextTranslateY;
+          }
         }
       })
       .onEnd(() => {
@@ -160,13 +188,15 @@ export function Zoom(props: Props) {
 
     // only add prop dependencies
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [maximumZoomScale, minimumZoomScale]);
+  }, [maximumZoomScale, minimumZoomScale, panEnabled]);
 
   useDerivedValue(() => {
-    if (scale.value > 1) {
+    if (scale.value > 1 && !isZoomed.value) {
       isZoomed.value = true;
-    } else if (scale.value === 1) {
+      runOnJS(setPanEnabled)(true);
+    } else if (scale.value === 1 && isZoomed.value) {
       isZoomed.value = false;
+      runOnJS(setPanEnabled)(false);
     }
   }, []);
 
