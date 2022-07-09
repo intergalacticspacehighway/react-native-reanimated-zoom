@@ -12,7 +12,7 @@ PODS:
   - EXJSONUtils (0.3.0)
   - EXManifests (0.3.0):
     - EXJSONUtils
-  - Expo (45.0.5):
+  - Expo (45.0.6):
     - ExpoModulesCore
   - expo-dev-client (1.0.0):
     - EXManifests
@@ -571,7 +571,7 @@ SPEC CHECKSUMS:
   EXFont: 04235cc22e6fef86028feb67db452978dc6f240f
   EXJSONUtils: 2a74b8f40f1523cc3f92af99c91aa78201737a77
   EXManifests: 0c6134b7b6f3236a93a778c3f44ba1cfb3f9fa3d
-  Expo: b9fff0a1eac0f424fc68ea49b4347fb308e52e17
+  Expo: 3df4af520db4f37f9821ba732ce9ac0dc67bb7b8
   expo-dev-client: 658fa86a3498812778d6c706205677c8e0674b9f
   expo-dev-launcher: d752e911ee38ae4aca228a109c4ce07984006c44
   expo-dev-menu: ef341cc70965de34085201b0ea57bc91f7ff16a8
