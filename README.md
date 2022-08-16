@@ -10,6 +10,7 @@ https://user-images.githubusercontent.com/23293248/155864802-a81cf3a3-9f08-4399-
 - Performant. No state triggered re-renders. ⚡️
 - Can be used with Image/Video or any kind of View.
 - Works with FlatList/ScrollView.
+- Consistent on Android and iOS.
 
 https://user-images.githubusercontent.com/23293248/174450283-e05684ed-9963-448b-8efc-bf33973aae0a.MP4
 
