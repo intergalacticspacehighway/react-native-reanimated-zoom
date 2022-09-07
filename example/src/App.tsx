@@ -6,8 +6,9 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import Animated from "react-native-reanimated"
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Zoom, createZoomListComponent } from 'react-native-reanimated-zoom';
+import { Zoom, createZoomListWithReanimatedComponent } from 'react-native-reanimated-zoom';
 
 const data = [
   'https://images.unsplash.com/photo-1536152470836-b943b246224c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1038&q=80',
@@ -16,7 +17,8 @@ const data = [
   'https://images.unsplash.com/photo-1444464666168-49d633b86797?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3269&q=80',
 ];
 
-const ZoomFlatList = createZoomListComponent(FlatList);
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+const ZoomFlatList = createZoomListWithReanimatedComponent(AnimatedFlatList);
 
 export default function App() {
   const [example, setExample] = React.useState('simple');
