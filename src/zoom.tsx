@@ -55,7 +55,6 @@ export function Zoom(props: Props) {
       originX.value = 0;
       originY.value = 0;
       isPinching.value = false;
-      isZoomed.value = false;
       prevScale.value = 0;
       prevTranslationX.value = 0;
       prevTranslationY.value = 0;
