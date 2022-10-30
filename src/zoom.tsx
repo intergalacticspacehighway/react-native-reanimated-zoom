@@ -8,13 +8,18 @@ import Animated, {
   cancelAnimation,
   runOnJS,
 } from 'react-native-reanimated';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  Gesture,
+  GestureDetector,
+  GestureType,
+} from 'react-native-gesture-handler';
 import { ZoomListContext } from './zoom-list-context';
 
 type Props = {
   children: React.ReactNode;
   minimumZoomScale?: number;
   maximumZoomScale?: number;
+  simultaneousGesture?: GestureType;
 } & ViewProps;
 
 export function Zoom(props: Props) {
@@ -23,6 +28,7 @@ export function Zoom(props: Props) {
     maximumZoomScale = 8,
     style: propStyle,
     onLayout,
+    simultaneousGesture,
   } = props;
 
   const zoomListContext = useContext(ZoomListContext);
@@ -198,11 +204,21 @@ export function Zoom(props: Props) {
       );
     }
 
-    return Gesture.Race(doubleTap, Gesture.Simultaneous(pan, pinch));
+    return Gesture.Race(
+      doubleTap,
+      simultaneousGesture
+        ? Gesture.Simultaneous(pan, pinch, simultaneousGesture)
+        : Gesture.Simultaneous(pan, pinch)
+    );
 
     // only add prop dependencies
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [maximumZoomScale, minimumZoomScale, zoomListContext]);
+  }, [
+    maximumZoomScale,
+    minimumZoomScale,
+    zoomListContext,
+    simultaneousGesture,
+  ]);
 
   useDerivedValue(() => {
     if (scale.value > 1 && !isZoomed.value) {
