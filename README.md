@@ -92,6 +92,8 @@ const ListExample = () => {
 
 - `minimumZoomScale` - Determines minimum scale value the component should zoom out. Defaults to 1.
 - `maximumZoomScale` - Determines maximum scale value the component should zoom in. Defaults to 8.
+- `onZoomBegin` - Callback. Gets called when view is zoomed in.
+- `onZoomEnd` - Callback. Gets called when view zoom is restored.
 
 ## Examples
 
