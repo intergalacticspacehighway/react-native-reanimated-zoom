@@ -20,6 +20,8 @@ type Props = {
   minimumZoomScale?: number;
   maximumZoomScale?: number;
   simultaneousGesture?: GestureType;
+  onZoomBegin?: () => void;
+  onZoomEnd?: () => void;
 } & ViewProps;
 
 export function Zoom(props: Props) {
@@ -224,11 +226,13 @@ export function Zoom(props: Props) {
     if (scale.value > 1 && !isZoomed.value) {
       isZoomed.value = true;
       if (zoomListContext) runOnJS(zoomListContext.onZoomBegin)();
+      if (onZoomBegin) runOnJS(onZoomBegin)();
     } else if (scale.value === 1 && isZoomed.value) {
       isZoomed.value = false;
       if (zoomListContext) runOnJS(zoomListContext.onZoomEnd)();
+      if (onZoomEnd) runOnJS(onZoomEnd)();
     }
-  }, [zoomListContext]);
+  }, [zoomListContext, onZoomBegin, onZoomEnd]);
 
   const style = useAnimatedStyle(() => {
     return {
