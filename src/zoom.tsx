@@ -30,6 +30,8 @@ export function Zoom(props: Props) {
     maximumZoomScale = 8,
     style: propStyle,
     onLayout,
+    onZoomBegin,
+    onZoomEnd,
     simultaneousGesture,
   } = props;
 
