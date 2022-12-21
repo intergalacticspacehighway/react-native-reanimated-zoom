@@ -1,5 +1,10 @@
-import React, { useCallback, useContext, useMemo } from 'react';
-import type { ViewProps } from 'react-native';
+import React, {
+  forwardRef,
+  useCallback,
+  useContext,
+  useImperativeHandle,
+  useMemo,
+} from 'react';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -8,23 +13,12 @@ import Animated, {
   cancelAnimation,
   runOnJS,
 } from 'react-native-reanimated';
-import {
-  Gesture,
-  GestureDetector,
-  GestureType,
-} from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+
 import { ZoomListContext } from './zoom-list-context';
+import type { ZoomInstance, ZoomProps } from './types';
 
-type Props = {
-  children: React.ReactNode;
-  minimumZoomScale?: number;
-  maximumZoomScale?: number;
-  simultaneousGesture?: GestureType;
-  onZoomBegin?: () => void;
-  onZoomEnd?: () => void;
-} & ViewProps;
-
-export function Zoom(props: Props) {
+export const Zoom = forwardRef<ZoomInstance, ZoomProps>((props, ref) => {
   const {
     minimumZoomScale = 1,
     maximumZoomScale = 8,
@@ -55,23 +49,24 @@ export function Zoom(props: Props) {
   const panTranslateX = useSharedValue(0);
   const panTranslateY = useSharedValue(0);
 
-  const gesture = useMemo(() => {
-    const resetZoomState = () => {
-      'worklet';
-      // reset all state
-      translationX.value = withTiming(0);
-      translationY.value = withTiming(0);
-      scale.value = withTiming(1);
-      originX.value = 0;
-      originY.value = 0;
-      isPinching.value = false;
-      prevScale.value = 0;
-      prevTranslationX.value = 0;
-      prevTranslationY.value = 0;
-      panTranslateX.value = 0;
-      panTranslateY.value = 0;
-    };
+  const resetZoomState = useCallback(() => {
+    'worklet';
+    // reset all state
+    translationX.value = withTiming(0);
+    translationY.value = withTiming(0);
+    scale.value = withTiming(1);
+    originX.value = 0;
+    originY.value = 0;
+    isPinching.value = false;
+    prevScale.value = 0;
+    prevTranslationX.value = 0;
+    prevTranslationY.value = 0;
+    panTranslateX.value = 0;
+    panTranslateY.value = 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  const gesture = useMemo(() => {
     // we only activate pan handler when the image is zoomed or user is not pinching
     const pan = Gesture.Pan()
       .onStart(() => {
@@ -222,6 +217,7 @@ export function Zoom(props: Props) {
     minimumZoomScale,
     zoomListContext,
     simultaneousGesture,
+    resetZoomState,
   ]);
 
   useDerivedValue(() => {
@@ -257,6 +253,8 @@ export function Zoom(props: Props) {
 
   const memoizedStyle = useMemo(() => [style, propStyle], [style, propStyle]);
 
+  useImperativeHandle(ref, () => ({ reset: resetZoomState }), [resetZoomState]);
+
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View
@@ -266,4 +264,4 @@ export function Zoom(props: Props) {
       />
     </GestureDetector>
   );
-}
+});
